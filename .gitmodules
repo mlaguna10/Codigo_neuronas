@@ -1,0 +1,3 @@
+[submodule "Codigo_neuronas"]
+	path = Codigo_neuronas
+	url = https://github.com/mlaguna10/Codigo_neuronas.git
