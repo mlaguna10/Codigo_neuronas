@@ -5,12 +5,6 @@ import glob
 index_i=0
 index_j=0
 
-def iteracion():
-    if(index_i==109 and index_j==109):
-        s=0
-    else:
-        os.system("make")
-
 def index():
     z=[]
     imagen = str(glob.glob('frec*'))
@@ -24,12 +18,38 @@ def index():
     img1 = str(z).replace("[","")
     img2 = img1.replace("]","")
     img3 = img2.replace("'","")
-    a = float(str(img3))/219.0
-    index_i = int(str(a)[0])
-    if(str(a)[2]=='0' and len(str(a))==3):
-        index_j = int(img3)
+    img4 = img3.replace(",","")
+    if(len(img4)==3):
+        d = img4[0] + img4[2]
+        a = float(str(d))/219.0
+        index_i = int(str(a)[0])
+        if(str(a)[2]=='0' and len(str(a))==3):
+            index_j = int(d)
+        else:
+            index_j = int(d) - index_i*220
+    elif(len(img4)==5):
+        d = img4[0] + img4[2] + img4[4]
+        a = float(str(d))/219.0
+        index_i = int(str(a)[0])
+        if(str(a)[2]=='0' and len(str(a))==3):
+            index_j = int(d)
+        else:
+            index_j = int(d) - index_i*220
     else:
-        index_j = int(img3) - index_i*219 - 1
+        a = float(str(img4))/219.0
+        index_i = int(str(a)[0])
+        if(str(a)[2]=='0' and len(str(a))==3):
+            index_j = int(img3)
+        else:
+            index_j = int(img3) - index_i*220
+
+
+    if(index_j==219):
+        index_j=0
+        index_i+=1
+    else:
+        index_j+=1
+    return index_i, index_j
 
 filepath = 'output.txt'
 archivo = 'porcentajes.txt'
@@ -44,24 +64,39 @@ with open(filepath) as fp:
         line = fp.readline()
         cnt += 1
 
-fp.close()
-
-file = open(archivo,"w")
-z = []
-value = False
-for letter in linea:
-    if(value):
-        z.append(letter)
-    else:
-        if(letter==str(0)):
+if(str(glob.glob('frec*')) == '[]'):
+    file = open(archivo,"w")
+    z = []
+    value = False
+    for letter in linea:
+        if(value):
             z.append(letter)
-            value = True
-s = ''.join(map(str,z))
-porcentaje = s.replace(")","")
-file.write(porcentaje)
-index()
-file.write(porcentaje + " " + str(index_i) + " " + str(index_j))
-file.close()
-os.system("rm output.txt")
-os.system("rm output.tx")
-iteracion()
+        else:
+            if(letter==str(0)):
+                z.append(letter)
+                value = True
+    s = ''.join(map(str,z))
+    porcentaje = s.replace(")","")
+    index_i, index_j = index()
+    print index_i, index_j
+    file.write(porcentaje + " " + str(index_i) + " " + str(index_j - 1) + "\n")
+    os.system("rm output.txt")
+    os.system("rm output.tx")
+else:
+    file = open(archivo,"a")
+    z = []
+    value = False
+    for letter in linea:
+        if(value):
+            z.append(letter)
+        else:
+            if(letter==str(0)):
+                z.append(letter)
+                value = True
+    s = ''.join(map(str,z))
+    porcentaje = s.replace(")","")
+    index_i, index_j = index()
+    file.write(porcentaje + " " + str(index_i) + " " + str(index_j-1) + "\n")
+    file.close()
+    os.system("rm output.txt")
+    os.system("rm output.tx")
