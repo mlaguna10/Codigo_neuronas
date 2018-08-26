@@ -24,31 +24,33 @@ def index():
         a = float(str(d))/219.0
         index_i = int(str(a)[0])
         if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(d)
+            index_j = int(d)/a
         else:
-            index_j = int(d) - index_i*220
+            index_j = abs(int(d) - index_i*220)
     elif(len(img4)==5):
         d = img4[0] + img4[2] + img4[4]
         a = float(str(d))/219.0
         index_i = int(str(a)[0])
         if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(d)
+            index_j = int(d)/a
         else:
-            index_j = int(d) - index_i*220
+            index_j = abs(int(d) - index_i*220)
     else:
         a = float(str(img4))/219.0
         index_i = int(str(a)[0])
         if(str(a)[2]=='0' and len(str(a))==3):
             index_j = int(img3)
         else:
-            index_j = int(img3) - index_i*220
+            index_j = abs(int(img3) - index_i*220)
 
 
-    if(index_j==219):
+    if(index_j%219==0 and len(str(a))==3):
         index_j=0
-        index_i+=1
     else:
-        index_j+=1
+        if(index_j==0 and index_i!=0):
+            index_j+=2
+        else:
+            index_j+=1
     return index_i, index_j
 
 filepath = 'output.txt'
@@ -79,7 +81,7 @@ if(str(glob.glob('frec*')) == '[]'):
     porcentaje = s.replace(")","")
     index_i, index_j = index()
     print index_i, index_j
-    file.write(porcentaje + " " + str(index_i) + " " + str(index_j - 1) + "\n")
+    file.write(porcentaje + " " + str(index_i) + " " + str(index_j-1) + "\n")
     os.system("rm output.txt")
     os.system("rm output.tx")
 else:
@@ -96,7 +98,14 @@ else:
     s = ''.join(map(str,z))
     porcentaje = s.replace(")","")
     index_i, index_j = index()
-    file.write(porcentaje + " " + str(index_i) + " " + str(index_j-1) + "\n")
-    file.close()
-    os.system("rm output.txt")
-    os.system("rm output.tx")
+    if(index_j==0):
+        index_j=1
+        file.write(porcentaje + " " + str(index_i) + " " + str(index_j-1) + "\n")
+        file.close()
+        os.system("rm output.txt")
+        os.system("rm output.tx")
+    else:
+        file.write(porcentaje + " " + str(index_i) + " " + str(index_j-1) + "\n")
+        file.close()
+        os.system("rm output.txt")
+        os.system("rm output.tx")

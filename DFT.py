@@ -8,6 +8,57 @@ import subprocess
 import sys
 import glob
 
+n=0
+
+def escribir(index_i, index_j):
+    filepath = 'output.txt'
+    archivo = 'porcentajes.txt'
+    porcentaje = ""
+    linea = ""
+
+    with open(filepath) as fp:
+        line = fp.readline()
+        cnt = 1
+        while line:
+            if(cnt == 4):
+                linea = "Line {}: {}".format(cnt, line.strip())
+            line = fp.readline()
+            cnt += 1
+
+    if(str(glob.glob('frec*')) == '[]'):
+        file = open(archivo,"w")
+        z = []
+        value = False
+        for letter in linea:
+            if(value):
+                z.append(letter)
+            else:
+                if(letter==str(0)):
+                    z.append(letter)
+                    value = True
+        s = ''.join(map(str,z))
+        porcentaje = s.replace(")","")
+        file.write(porcentaje + " " + str(index_i) + " " + str(index_j) + "\n")
+        os.system("rm output.txt")
+        os.system("rm output.tx")
+    else:
+        file = open(archivo,"a")
+        z = []
+        value = False
+        for letter in linea:
+            if(value):
+                z.append(letter)
+            else:
+                if(letter==str(0)):
+                    z.append(letter)
+                    value = True
+        s = ''.join(map(str,z))
+        porcentaje = s.replace(")","")
+        file.write(porcentaje + " " + str(index_i) + " " + str(index_j) + "\n")
+        file.close()
+        os.system("rm output.txt")
+        os.system("rm output.tx")
+
 def inicio(index_i, index_j):
     imagen = str(glob.glob('frec*'))
     if(imagen == '[]'):
@@ -16,14 +67,23 @@ def inicio(index_i, index_j):
         h = os.popen("python scripts/label_image.py --image frec_" + str(index_i*219 + index_j) + ".png").read()
         f.write(h)
         f.close()
+        escribir(index_i, index_j)
     else:
-        index_i, index_j = index()
+        #factor de compensacion
+        if(index_j==0):
+            n=1
+        else:
+            if(index_i!=0):
+                n=1
+            else:
+                n=0
         os.system("rm frec_*")
-        plt.savefig('frec_' + str(index_i*219 + index_j) + ".png",bbox_inches='tight', pad_inches=-0.1)
+        plt.savefig('frec_' + str(index_i*219 + index_j + n) + ".png",bbox_inches='tight', pad_inches=-0.1)
         f = open("output.txt", 'w')
-        h = os.popen("python scripts/label_image.py --image frec_" + str(index_i*219 + index_j) + ".png").read()
+        h = os.popen("python scripts/label_image.py --image frec_" + str(index_i*219 + index_j + n) + ".png").read()
         f.write(h)
         f.close()
+        escribir(index_i, index_j)
     return index_i, index_j
 
 def index():
@@ -45,39 +105,67 @@ def index():
         a = float(str(d))/219.0
         index_i = int(str(a)[0])
         if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(d)
+            index_j = int(d)/a
         else:
-            index_j = int(d) - index_i*220
-
+            index_j = abs(int(d) - index_i*219)
     elif(len(img4)==5):
         d = img4[0] + img4[2] + img4[4]
         a = float(str(d))/219.0
         index_i = int(str(a)[0])
         if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(d)
+            index_j = int(d)/a
         else:
-            index_j = int(d) - index_i*220
-
+            index_j = abs(int(d) - index_i*219)
+    elif(len(img4)==7):
+        d = img4[0] + img4[2] + img4[4] + img4[6]
+        a = float(str(d))/219.0
+        if(str(a)[1]!="."):
+            index_i = int(str(a)[0])
+        else:
+            index_i = int(str(a)[0] + str(a)[1])
+        if(str(a)[2]=='0' and len(str(a))==3):
+            index_j = int(d)/a
+        else:
+            index_j = abs(int(d) - index_i*219)
+    elif(len(img4)==9):
+        d = img4[0] + img4[2] + img4[4] + img4[8] + img4[6]
+        a = float(str(d))/219.0
+        if(str(a)[2]!="."):
+            index_i = int(str(a)[0])
+        else:
+            index_i = int(str(a)[0] + str(a)[1] + str(a)[2])
+        if(str(a)[2]=='0' and len(str(a))==3):
+            index_j = int(d)/a
+        else:
+            index_j = abs(int(d) - index_i*219)
+            print index_j
     else:
         a = float(str(img4))/219.0
         index_i = int(str(a)[0])
         if(str(a)[2]=='0' and len(str(a))==3):
             index_j = int(img3)
         else:
-            index_j = int(img3) - index_i*220
+            index_j = abs(int(img3) - index_i*219)
 
 
-    if(index_j==219):
+    if(index_j%219==0 and len(str(a))==3 and a!=0):
         index_j=0
-        index_i+=1
     else:
-        index_j+=1
+        if(index_j>=1 and index_i!=0):
+            s=0
+        else:
+            index_j+=1
     return index_i, index_j
 
 def cut_off_frec(frec,i,j):
     if(i==0 and j==0):
         frec[0][0] = 0
     else:
+        #arreglar aqui el error culo, plantear la matematica de los indices
+        #corrido para 435 los valores que imprime (esta delantado uno)
+        #pasa la barrera de 219 bien en DFT y escritura
+        #arranca bien, se pueden ir armando grupos de 100 y mirar que salgan bien
+        #ANALIZAR INDICES PARA SABER SI FRECUENCIAS ESTAN BIEN
         frec[i][j]=0
         if(i==0 and j==1):
             frec[219-i][220-j]=0
