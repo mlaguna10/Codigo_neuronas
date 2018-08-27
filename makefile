@@ -1,4 +1,2 @@
-output.txt: DFT.py
-	python DFT.py > output.tx
+grafica.pdf: escritura.py
 	python escritura.py
-	

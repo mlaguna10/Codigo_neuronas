@@ -1,111 +1,69 @@
 import numpy as np
 import os
 import glob
-
-index_i=0
-index_j=0
-
-def index():
-    z=[]
-    imagen = str(glob.glob('frec*'))
-    img1 = imagen.replace("[","")
-    img2 = img1.replace("]","")
-    img3 = img2.replace("'","")
-    i = img3.index('_')
-    while(img3[i+1]!='.'):
-        z.append(img3[i+1])
-        i+=1
-    img1 = str(z).replace("[","")
-    img2 = img1.replace("]","")
-    img3 = img2.replace("'","")
-    img4 = img3.replace(",","")
-    if(len(img4)==3):
-        d = img4[0] + img4[2]
-        a = float(str(d))/219.0
-        index_i = int(str(a)[0])
-        if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(d)/a
-        else:
-            index_j = abs(int(d) - index_i*220)
-    elif(len(img4)==5):
-        d = img4[0] + img4[2] + img4[4]
-        a = float(str(d))/219.0
-        index_i = int(str(a)[0])
-        if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(d)/a
-        else:
-            index_j = abs(int(d) - index_i*220)
-    else:
-        a = float(str(img4))/219.0
-        index_i = int(str(a)[0])
-        if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(img3)
-        else:
-            index_j = abs(int(img3) - index_i*220)
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 
 
-    if(index_j%219==0 and len(str(a))==3):
-        index_j=0
-    else:
-        if(index_j==0 and index_i!=0):
-            index_j+=2
-        else:
-            index_j+=1
-    return index_i, index_j
+porc = 'porcentajes.txt'
+porc2 = 'porcentajes2.txt'
+index_i = []
+index_j = []
+values = []
+index_i2 = []
+index_j2 = []
+values2 = []
 
-filepath = 'output.txt'
-archivo = 'porcentajes.txt'
-porcentaje = ""
-linea = ""
-with open(filepath) as fp:
-    line = fp.readline()
-    cnt = 1
+def p1():
+    file1 = open(porc,'r')
+    line = file1.readline()
     while line:
-        if(cnt == 4):
-            linea = "Line {}: {}".format(cnt, line.strip())
-        line = fp.readline()
-        cnt += 1
+        val, i, j = line.split(" ")
+        values.append(float(val))
+        index_i.append(int(i))
+        index_j.append(int(j))
+        if(int(i)==109 and int(j)==218):
+            break
+        line = file1.readline()
+    file1.close()
 
-if(str(glob.glob('frec*')) == '[]'):
-    file = open(archivo,"w")
-    z = []
-    value = False
-    for letter in linea:
-        if(value):
-            z.append(letter)
-        else:
-            if(letter==str(0)):
-                z.append(letter)
-                value = True
-    s = ''.join(map(str,z))
-    porcentaje = s.replace(")","")
-    index_i, index_j = index()
-    print index_i, index_j
-    file.write(porcentaje + " " + str(index_i) + " " + str(index_j-1) + "\n")
-    os.system("rm output.txt")
-    os.system("rm output.tx")
-else:
-    file = open(archivo,"a")
-    z = []
-    value = False
-    for letter in linea:
-        if(value):
-            z.append(letter)
-        else:
-            if(letter==str(0)):
-                z.append(letter)
-                value = True
-    s = ''.join(map(str,z))
-    porcentaje = s.replace(")","")
-    index_i, index_j = index()
-    if(index_j==0):
-        index_j=1
-        file.write(porcentaje + " " + str(index_i) + " " + str(index_j-1) + "\n")
-        file.close()
-        os.system("rm output.txt")
-        os.system("rm output.tx")
-    else:
-        file.write(porcentaje + " " + str(index_i) + " " + str(index_j-1) + "\n")
-        file.close()
-        os.system("rm output.txt")
-        os.system("rm output.tx")
+def p2():
+    z=1
+    file2 = open(porc2,'r')
+    linea = file2.readline()
+    while linea and z <110:
+        val, i, j = linea.split(" ")
+        values2.append(float(val))
+        index_i2.append(int(i))
+        index_j2.append(int(j))
+        linea = file2.readline()
+        z+=1
+    file2.close()
+
+p1()
+p2()
+
+j=0
+for i in range(24200):
+    if(i%219==0 and i!=219 and i!=0):
+        index_i.insert(i,index_i2[j])
+        index_j.insert(i,index_j2[j])
+        values.insert(i,values2[j])
+        if(index_i[i]==109 and index_j[i]==219):
+            break
+        j+=1
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(1,2,3)
+ax.set_title('Recongnition per frecuency')
+ax.set_xlim([0,110])
+ax.set_ylim([0,220])
+ax.set_zlim([0,1])
+surf = ax.plot_trisurf(index_i, index_j,values, cmap=cm.coolwarm)
+ax.set_xlabel('index i')
+ax.set_ylabel('index j')
+ax.set_zlabel('classification %') #asi seria con latex r'$\gamma$'
+fig.colorbar(surf, shrink=0.5, aspect=5)
+plt.savefig("grafica.pdf")

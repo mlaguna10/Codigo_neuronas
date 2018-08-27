@@ -72,7 +72,7 @@ def inicio(index_i, index_j):
             n=1
         else:
             if(index_i!=0):
-                if(index_i*219 == index_j/index_i):
+                if(index_j%219==0):
                     n=0
                 else:
                     n=1
@@ -112,6 +112,8 @@ def index():
         index_i = int(str(a)[0])
         if(str(a)[2]=='0' and len(str(a))==3):
             index_j=0
+        elif(float(str(d))==(219.0*(index_i+1)-1)):
+            index_j = int(str(d)) + 1 - 219*index_i
         else:
             if(index_i!=0):
                 if(index_i==1):
@@ -127,7 +129,9 @@ def index():
             index_i = int(str(a)[0] + str(a)[1])
         else:
             index_i = int(str(a)[0])
-        if(len(str(index_i))!=1):
+        if(float(str(d))==(219.0*(index_i+1)-1)):
+            index_j = int(str(d)) + 1 - 219*index_i
+        elif(len(str(index_i))!=1):
             if(str(a)[3]=='0' and len(str(a))==4):
                 index_j = 0
             else:
@@ -144,7 +148,9 @@ def index():
             index_i = int(str(a)[0] + str(a)[1] + str(a)[2])
         else:
             index_i = int(str(a)[0] + str(a)[1])
-        if(len(str(index_i))!=2):
+        if(float(str(d))==(219.0*(index_i+1)-1)):
+            index_j = int(str(d)) + 1 - 219*index_i
+        elif(len(str(index_i))!=2):
             if(str(a)[4]=='0' and len(str(a))==5):
                 index_j = 0
             else:
@@ -192,6 +198,7 @@ else:
     index_i, index_j = index()
     img = cv2.imread('gray_rose.jpg',0)
     dft = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
+    print index_i, index_j
     dft = cut_off_frec(dft,index_i,index_j)
     img_back = cv2.idft(dft)
     img_back = cv2.magnitude(img_back[:,:,0],img_back[:,:,1])
