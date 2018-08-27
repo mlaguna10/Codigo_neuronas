@@ -40,7 +40,6 @@ def escribir(index_i, index_j):
         porcentaje = s.replace(")","")
         file.write(porcentaje + " " + str(index_i) + " " + str(index_j) + "\n")
         os.system("rm output.txt")
-        os.system("rm output.tx")
     else:
         file = open(archivo,"a")
         z = []
@@ -57,7 +56,6 @@ def escribir(index_i, index_j):
         file.write(porcentaje + " " + str(index_i) + " " + str(index_j) + "\n")
         file.close()
         os.system("rm output.txt")
-        os.system("rm output.tx")
 
 def inicio(index_i, index_j):
     imagen = str(glob.glob('frec*'))
@@ -74,7 +72,10 @@ def inicio(index_i, index_j):
             n=1
         else:
             if(index_i!=0):
-                n=1
+                if(index_i*219 == index_j/index_i):
+                    n=0
+                else:
+                    n=1
             else:
                 n=0
         os.system("rm frec_*")
@@ -104,73 +105,74 @@ def index():
         d = img4[0] + img4[2]
         a = float(str(d))/219.0
         index_i = int(str(a)[0])
-        if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(d)/a
-        else:
-            index_j = abs(int(d) - index_i*219)
+        index_j = int(str(d))+1
     elif(len(img4)==5):
         d = img4[0] + img4[2] + img4[4]
         a = float(str(d))/219.0
         index_i = int(str(a)[0])
         if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(d)/a
+            index_j=0
         else:
-            index_j = abs(int(d) - index_i*219)
+            if(index_i!=0):
+                if(index_i==1):
+                    index_j=(int(str(d))%(220*index_i - (index_i)))
+                else:
+                    index_j=(int(str(d))%(220*index_i - (index_i-1)))+1
+            else:
+                index_j = int(str(d))+1
     elif(len(img4)==7):
         d = img4[0] + img4[2] + img4[4] + img4[6]
         a = float(str(d))/219.0
         if(str(a)[1]!="."):
-            index_i = int(str(a)[0])
-        else:
             index_i = int(str(a)[0] + str(a)[1])
-        if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(d)/a
         else:
-            index_j = abs(int(d) - index_i*219)
+            index_i = int(str(a)[0])
+        if(len(str(index_i))!=1):
+            if(str(a)[3]=='0' and len(str(a))==4):
+                index_j = 0
+            else:
+                index_j=(int(str(d))%(220*index_i - (index_i-1)))+1
+        else:
+            if(str(a)[2]=='0' and len(str(a))==3):
+                index_j = 0
+            else:
+                index_j=(int(str(d))%(220*index_i - (index_i-1)))+1
     elif(len(img4)==9):
-        d = img4[0] + img4[2] + img4[4] + img4[8] + img4[6]
+        d = img4[0] + img4[2] + img4[4] + img4[6] + img4[8]
         a = float(str(d))/219.0
         if(str(a)[2]!="."):
-            index_i = int(str(a)[0])
-        else:
             index_i = int(str(a)[0] + str(a)[1] + str(a)[2])
-        if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(d)/a
         else:
-            index_j = abs(int(d) - index_i*219)
-            print index_j
+            index_i = int(str(a)[0] + str(a)[1])
+        if(len(str(index_i))!=2):
+            if(str(a)[4]=='0' and len(str(a))==5):
+                index_j = 0
+            else:
+                index_j=(int(str(d))%(220*index_i - (index_i-1)))+1
+        else:
+            if(str(a)[3]=='0' and len(str(a))==4):
+                index_j = 0
+            else:
+                index_j=(int(str(d))%(220*index_i - (index_i-1)))+1
     else:
-        a = float(str(img4))/219.0
+        d = img4[0]
+        a = float(str(d))/219.0
         index_i = int(str(a)[0])
-        if(str(a)[2]=='0' and len(str(a))==3):
-            index_j = int(img3)
-        else:
-            index_j = abs(int(img3) - index_i*219)
+        index_j= int(str(d))+1
 
-
-    if(index_j%219==0 and len(str(a))==3 and a!=0):
-        index_j=0
-    else:
-        if(index_j>=1 and index_i!=0):
-            s=0
-        else:
-            index_j+=1
     return index_i, index_j
 
 def cut_off_frec(frec,i,j):
     if(i==0 and j==0):
         frec[0][0] = 0
     else:
-        #arreglar aqui el error culo, plantear la matematica de los indices
-        #corrido para 435 los valores que imprime (esta delantado uno)
-        #pasa la barrera de 219 bien en DFT y escritura
-        #arranca bien, se pueden ir armando grupos de 100 y mirar que salgan bien
-        #ANALIZAR INDICES PARA SABER SI FRECUENCIAS ESTAN BIEN
         frec[i][j]=0
-        if(i==0 and j==1):
-            frec[219-i][220-j]=0
-        else:
+        if(j==0):
+            i=i-1
+            j=j+219
             frec[219-i][219-j]=0
+        else:
+            frec[219-i][219-j+1]=0
     return frec
 
 if(str(glob.glob('frec*')) == '[]'):

@@ -3,7 +3,7 @@ import os
 import time
 start = time.time()
 
-for i in range(5):
+for i in range(24200):
     os.system('python DFT.py > output.tx')
     #os.system('python escritura.py')
 
