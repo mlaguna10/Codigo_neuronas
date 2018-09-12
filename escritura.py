@@ -23,8 +23,8 @@ def p1():
         values.append(float(val))
         index_i.append(int(i))
         index_j.append(int(j))
-        if(int(i)==109 and int(j)==218):
-            break
+        # if(int(i)==109 and int(j)==218):
+        #     break
         line = file1.readline()
     file1.close()
 
@@ -42,28 +42,21 @@ def p2():
     file2.close()
 
 p1()
-p2()
-
-j=0
-for i in range(24200):
-    if(i%219==0 and i!=219 and i!=0):
-        index_i.insert(i,index_i2[j])
-        index_j.insert(i,index_j2[j])
-        values.insert(i,values2[j])
-        if(index_i[i]==109 and index_j[i]==219):
-            break
-        j+=1
+#p2()
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(1,2,3)
-ax.set_title('Recongnition per frecuency')
-ax.set_xlim([0,110])
+ax.set_title(r'Recongnition $\frac{N}{4}$ frecuencies')
+#en x voy de 2 en 2 hasta 108
+#en y voy de 2 en 2 hasta 220
+ax.set_xlim([0,108])
 ax.set_ylim([0,220])
-ax.set_zlim([0,1])
+ax.set_zlim([0.91,0.98])
 surf = ax.plot_trisurf(index_i, index_j,values, cmap=cm.coolwarm)
 ax.set_xlabel('index i')
 ax.set_ylabel('index j')
 ax.set_zlabel('classification %') #asi seria con latex r'$\gamma$'
 fig.colorbar(surf, shrink=0.5, aspect=5)
+plt.tight_layout()
 plt.savefig("grafica.pdf")

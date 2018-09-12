@@ -97,8 +97,8 @@ def index():
         d = img4[0] + img4[2] + img4[4]
         a = (float(str(d))+2)%220==0
         if(a):
-            z = (int(d)+2)/220
-            index_i = z+1
+            z = (int(d)+2)/220.0
+            index_i = int(z)+1
             index_j = (int(str(d))+2)%220
         else:
             index_i = int(d)/220
@@ -107,7 +107,7 @@ def index():
         d = img4[0] + img4[2] + img4[4] + img4[6]
         a = (float(str(d))+2)%220==0
         if(a):
-            z = (int(d)+2)/220
+            z = (int(d)+2)/220.0
             if(str(z)[1]!="."):
                 index_i = int(str(z)[0] + str(z)[1])+1
             else:
@@ -120,7 +120,7 @@ def index():
         d = img4[0] + img4[2] + img4[4] + img4[6] + img4[8]
         a = (float(str(d))+2)%220==0
         if(a):
-            z = (int(d)+2)/220
+            z = (int(d)+2)/220.0
             if(str(z)[2]!="."):
                 index_i = int(str(z)[0] + str(z)[1] + str(z)[2])+1
             else:
@@ -155,13 +155,16 @@ if(str(glob.glob('frec*')) == '[]'):
     img = cv2.imread('gray_rose.jpg',0)
     dft = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
     dft = cut_off_frec(dft,index_i,index_j)
+    print np.shape(dft)
     img_back = cv2.idft(dft)
-    img_back = cv2.magnitude(img_back[:,:,0],img_back[:,:,1])
-    fig = plt.figure()
-    fig.set_size_inches(3.56,3.56)
-    plt.imshow(img_back,cmap='gray')
-    plt.xticks([]), plt.yticks([])
-    index_i, index_j = inicio(index_i, index_j)
+    print np.shape(img_back)
+    #revisar si mejor hacer la inversa de fourier como en norma
+    # img_back = cv2.magnitude(img_back[:,:,0],img_back[:,:,1])
+    # fig = plt.figure()
+    # fig.set_size_inches(3.56,3.56)
+    # plt.imshow(img_back,cmap='gray')
+    # plt.xticks([]), plt.yticks([])
+    # index_i, index_j = inicio(index_i, index_j)
 else:
     index_i, index_j = index()
     img = cv2.imread('gray_rose.jpg',0)
