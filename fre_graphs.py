@@ -271,4 +271,4 @@ def img_real_hist(y,real):
 #img_real_sections(complejos,False)
 
 #img_real_hist(reales,True)
-img_real_hist(complejos,False)
+#img_real_hist(complejos,False)
