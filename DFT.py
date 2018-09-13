@@ -155,16 +155,14 @@ if(str(glob.glob('frec*')) == '[]'):
     img = cv2.imread('gray_rose.jpg',0)
     dft = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
     dft = cut_off_frec(dft,index_i,index_j)
-    print np.shape(dft)
     img_back = cv2.idft(dft)
-    print np.shape(img_back)
-    #revisar si mejor hacer la inversa de fourier como en norma
-    # img_back = cv2.magnitude(img_back[:,:,0],img_back[:,:,1])
-    # fig = plt.figure()
-    # fig.set_size_inches(3.56,3.56)
-    # plt.imshow(img_back,cmap='gray')
-    # plt.xticks([]), plt.yticks([])
-    # index_i, index_j = inicio(index_i, index_j)
+    print img_back
+    img_back = cv2.magnitude(img_back[:,:,0],img_back[:,:,1])
+    fig = plt.figure()
+    fig.set_size_inches(3.56,3.56)
+    plt.imshow(img_back,cmap='gray')
+    plt.xticks([]), plt.yticks([])
+    index_i, index_j = inicio(index_i, index_j)
 else:
     index_i, index_j = index()
     img = cv2.imread('gray_rose.jpg',0)

@@ -44,19 +44,20 @@ def p2():
 p1()
 #p2()
 
+#en la tesis se debe explicar que el paso es de 2 en 2.
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(1,2,3)
-ax.set_title(r'Recongnition $\frac{N}{4}$ frecuencies')
-#en x voy de 2 en 2 hasta 108
-#en y voy de 2 en 2 hasta 220
-ax.set_xlim([0,108])
-ax.set_ylim([0,220])
+ax.set_title('Classification by each pair of frecuencies ')
+bins = np.arange(0,13)*9
+plt.xticks(bins, np.arange(0,13)*9,fontsize=7)
+bins = np.arange(0,12)*20
+plt.yticks(bins, np.arange(0,12)*20,fontsize=7)
 ax.set_zlim([0.91,0.98])
 surf = ax.plot_trisurf(index_i, index_j,values, cmap=cm.coolwarm)
 ax.set_xlabel('index i')
 ax.set_ylabel('index j')
-ax.set_zlabel('classification %') #asi seria con latex r'$\gamma$'
+ax.set_zlabel('classification %')
 fig.colorbar(surf, shrink=0.5, aspect=5)
 plt.tight_layout()
-plt.savefig("grafica.pdf")
+plt.savefig("N4_isolated_frec.pdf")
