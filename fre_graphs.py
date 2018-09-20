@@ -264,11 +264,11 @@ def img_real_hist(y,real):
 
         plt.savefig("imaginary_hist.pdf")
 
-#img_real_frec(reales,True)
-#img_real_frec(complejos,False)
+img_real_frec(reales,True)
+img_real_frec(complejos,False)
 
-#img_real_sections(reales,True)
-#img_real_sections(complejos,False)
+img_real_sections(reales,True)
+img_real_sections(complejos,False)
 
-#img_real_hist(reales,True)
-#img_real_hist(complejos,False)
+img_real_hist(reales,True)
+img_real_hist(complejos,False)

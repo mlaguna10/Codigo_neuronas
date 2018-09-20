@@ -8,6 +8,8 @@ import subprocess
 import sys
 import glob
 
+k_index = np.logspace(0,7,49)
+
 def escribir(index_i, index_j):
     filepath = 'output.txt'
     archivo = 'porcentajes.txt'
@@ -52,6 +54,53 @@ def escribir(index_i, index_j):
         s = ''.join(map(str,z))
         porcentaje = s.replace(")","")
         file.write(porcentaje + " " + str(index_i) + " " + str(index_j) + "\n")
+        file.close()
+        os.system("rm output.txt")
+
+def escribir_kvector(k_index,iter):
+    filepath = 'output.txt'
+    archivo = 'porcentajes_kvector.txt'
+    porcentaje = ""
+    linea = ""
+
+    with open(filepath) as fp:
+        line = fp.readline()
+        cnt = 1
+        while line:
+            if(cnt == 4):
+                linea = "Line {}: {}".format(cnt, line.strip())
+            line = fp.readline()
+            cnt += 1
+
+    if(str(glob.glob('frec*')) == '[]'):
+        file = open(archivo,"w")
+        z = []
+        value = False
+        for letter in linea:
+            if(value):
+                z.append(letter)
+            else:
+                if(letter==str(0)):
+                    z.append(letter)
+                    value = True
+        s = ''.join(map(str,z))
+        porcentaje = s.replace(")","")
+        file.write(porcentaje + " " + str(k_index) + " " + str(iter) + "\n")
+        os.system("rm output.txt")
+    else:
+        file = open(archivo,"a")
+        z = []
+        value = False
+        for letter in linea:
+            if(value):
+                z.append(letter)
+            else:
+                if(letter==str(0)):
+                    z.append(letter)
+                    value = True
+        s = ''.join(map(str,z))
+        porcentaje = s.replace(")","")
+        file.write(porcentaje + " " + str(k_index) + " " + str(iter) + "\n")
         file.close()
         os.system("rm output.txt")
 
@@ -141,7 +190,6 @@ def cut_off_frec(frec,i,j):
     if(i==0 and j==0):
         frec[0][0] = 0
     else:
-        print i, j
         frec[i][j]=0
         if(i==0):
             frec[219-i][220-index_j]=0
@@ -149,29 +197,60 @@ def cut_off_frec(frec,i,j):
             frec[219-i][219-index_j]=0
     return frec
 
-if(str(glob.glob('frec*')) == '[]'):
-    index_i=0
-    index_j=0
-    img = cv2.imread('gray_rose.jpg',0)
-    dft = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
-    dft = cut_off_frec(dft,index_i,index_j)
-    img_back = cv2.idft(dft)
-    print img_back
-    img_back = cv2.magnitude(img_back[:,:,0],img_back[:,:,1])
-    fig = plt.figure()
-    fig.set_size_inches(3.56,3.56)
-    plt.imshow(img_back,cmap='gray')
-    plt.xticks([]), plt.yticks([])
-    index_i, index_j = inicio(index_i, index_j)
-else:
-    index_i, index_j = index()
-    img = cv2.imread('gray_rose.jpg',0)
-    dft = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
-    dft = cut_off_frec(dft,index_i,index_j)
-    img_back = cv2.idft(dft)
-    img_back = cv2.magnitude(img_back[:,:,0],img_back[:,:,1])
-    fig = plt.figure()
-    fig.set_size_inches(3.56,3.56)
-    plt.imshow(img_back,cmap='gray')
-    plt.xticks([]), plt.yticks([])
-    index_i, index_j = inicio(index_i, index_j)
+def cut_off_kvector(frec,k_index):
+    s=0
+    for i in range(220):
+        for j in range(220):
+            real,complex = frec[i][j]
+            norm = np.sqrt((float(real)**2 + float(complex)**2))
+            if(k_index < norm):
+                frec[i][j]=0
+                s+=1
+    return frec, s
+
+#codigo en negrilla representa isolated frecuencies
+for i in k_index:
+    if(str(glob.glob('frec*')) == '[]'):
+        index_i=0
+        index_j=0
+        img = cv2.imread('gray_rose.jpg',0)
+        dft = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
+        #dft = cut_off_frec(dft,index_i,index_j)
+        dft,s = cut_off_kvector(dft,i)
+        img_back = cv2.idft(dft)
+        img_back = cv2.magnitude(img_back[:,:,0],img_back[:,:,1])
+        fig = plt.figure()
+        fig.set_size_inches(3.56,3.56)
+        plt.imshow(img_back,cmap='gray')
+        plt.xticks([]), plt.yticks([])
+        #index_i, index_j = inicio(index_i, index_j)
+        plt.savefig('frec_' + str(i) + ".png",bbox_inches='tight', pad_inches=-0.1)
+        f = open("output.txt", 'w')
+        h = os.popen("python scripts/label_image.py --image frec_" + str(i) + ".png").read()
+        f.write(h)
+        f.close()
+        #escribir(index_i, index_j)
+        escribir_kvector(i,s)
+    else:
+        #index_i, index_j = index()
+        img = cv2.imread('gray_rose.jpg',0)
+        dft = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
+        #dft = cut_off_frec(dft,index_i,index_j)
+        dft,s = cut_off_kvector(dft,i)
+        img_back = cv2.idft(dft)
+        img_back = cv2.magnitude(img_back[:,:,0],img_back[:,:,1])
+        fig = plt.figure()
+        fig.set_size_inches(3.56,3.56)
+        plt.imshow(img_back,cmap='gray')
+        plt.xticks([]), plt.yticks([])
+        #index_i, index_j = inicio(index_i, index_j)
+
+        os.system("rm frec_*")
+        plt.savefig('frec_' + str(i) + ".png",bbox_inches='tight', pad_inches=-0.1)
+        f = open("output.txt", 'w')
+        h = os.popen("python scripts/label_image.py --image frec_" + str(i) + ".png").read()
+        f.write(h)
+        f.close()
+        #escribir(index_i, index_j)
+        print i, s
+        escribir_kvector(i,s)
