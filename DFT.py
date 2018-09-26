@@ -11,8 +11,9 @@ import glob
 k_index = np.logspace(0,7,49)
 
 def escribir(index_i, index_j):
+    #index_i es k upper limit y index_j cantidad de frec muertas
     filepath = 'output.txt'
-    archivo = 'porcentajes.txt'
+    archivo = 'porcentajes_kvector.txt'
     porcentaje = ""
     linea = ""
 
@@ -20,41 +21,144 @@ def escribir(index_i, index_j):
         line = fp.readline()
         cnt = 1
         while line:
-            if(cnt == 4):
-                linea = "Line {}: {}".format(cnt, line.strip())
+            if(line.split(" ")[0] == 'roses'):
+                linea1 = "Line {}: {}".format(cnt, line.strip())
+            elif(line.split(" ")[0] == 'tulips'):
+                linea2 = "Line {}: {}".format(cnt, line.strip())
+            elif(line.split(" ")[0] == 'sunflowers'):
+                linea3 = "Line {}: {}".format(cnt, line.strip())
+            elif(line.split(" ")[0] == 'dandelion'):
+                linea4 = "Line {}: {}".format(cnt, line.strip())
+            elif(line.split(" ")[0] == 'daisy'):
+                linea5 = "Line {}: {}".format(cnt, line.strip())
             line = fp.readline()
             cnt += 1
 
     if(str(glob.glob('frec*')) == '[]'):
         file = open(archivo,"w")
-        z = []
+        z1 = []
+        z2 = []
+        z3 = []
+        z4 = []
+        z5 = []
         value = False
-        for letter in linea:
+        for letter in linea1:
             if(value):
-                z.append(letter)
+                z1.append(letter)
             else:
                 if(letter==str(0)):
-                    z.append(letter)
+                    z1.append(letter)
                     value = True
-        s = ''.join(map(str,z))
-        porcentaje = s.replace(")","")
-        file.write(porcentaje + " " + str(index_i) + " " + str(index_j) + "\n")
+        value=False
+        for letter in linea2:
+            if(value):
+                z2.append(letter)
+            else:
+                if(letter==str(0)):
+                    z2.append(letter)
+                    value = True
+        value=False
+        for letter in linea3:
+            if(value):
+                z3.append(letter)
+            else:
+                if(letter==str(0)):
+                    z3.append(letter)
+                    value = True
+        value=False
+        for letter in linea4:
+            if(value):
+                z4.append(letter)
+            else:
+                if(letter==str(0)):
+                    z4.append(letter)
+                    value = True
+        value=False
+        for letter in linea5:
+            if(value):
+                z5.append(letter)
+            else:
+                if(letter==str(0)):
+                    z5.append(letter)
+                    value = True
+
+        s1 = ''.join(map(str,z1))
+        porcentaje1 = s1.replace(")","")
+        s2 = ''.join(map(str,z2))
+        porcentaje2 = s2.replace(")","")
+        s3 = ''.join(map(str,z3))
+        porcentaje3 = s3.replace(")","")
+        s4 = ''.join(map(str,z4))
+        porcentaje4 = s4.replace(")","")
+        s5 = ''.join(map(str,z5))
+        porcentaje5 = s5.replace(")","")
+
+        #rosas, tulipanes, sunflowers, dandelion, daisy
+        print porcentaje1,porcentaje2,porcentaje3,porcentaje4,porcentaje5
+        file.write(porcentaje1 + " " + porcentaje2 + " " + porcentaje3 + " " + porcentaje4 + " " + porcentaje5 + " " + str(index_i) + " " + str(index_j) + "\n")
         os.system("rm output.txt")
     else:
         file = open(archivo,"a")
-        z = []
+        z1 = []
+        z2 = []
+        z3 = []
+        z4 = []
+        z5 = []
         value = False
-        for letter in linea:
+        for letter in linea1:
             if(value):
-                z.append(letter)
+                z1.append(letter)
             else:
                 if(letter==str(0)):
-                    z.append(letter)
+                    z1.append(letter)
                     value = True
-        s = ''.join(map(str,z))
-        porcentaje = s.replace(")","")
-        file.write(porcentaje + " " + str(index_i) + " " + str(index_j) + "\n")
-        file.close()
+        value=False
+        for letter in linea2:
+            if(value):
+                print letter
+                z2.append(letter)
+            else:
+                if(letter==str(0)):
+                    z2.append(letter)
+                    value = True
+        value=False
+        for letter in linea3:
+            if(value):
+                z3.append(letter)
+            else:
+                if(letter==str(0)):
+                    z3.append(letter)
+                    value = True
+        value=False
+        for letter in linea4:
+            if(value):
+                z4.append(letter)
+            else:
+                if(letter==str(0)):
+                    z4.append(letter)
+                    value = True
+        value=False
+        for letter in linea5:
+            if(value):
+                z5.append(letter)
+            else:
+                if(letter==str(0)):
+                    z5.append(letter)
+                    value = True
+
+        s1 = ''.join(map(str,z1))
+        porcentaje1 = s1.replace(")","")
+        s2 = ''.join(map(str,z2))
+        porcentaje2 = s2.replace(")","")
+        s3 = ''.join(map(str,z3))
+        porcentaje3 = s3.replace(")","")
+        s4 = ''.join(map(str,z4))
+        porcentaje4 = s4.replace(")","")
+        s5 = ''.join(map(str,z5))
+        porcentaje5 = s5.replace(")","")
+
+        #rosas, tulipanes, sunflowers, dandelion, daisy
+        file.write(porcentaje1 + " " + porcentaje2 + " " + porcentaje3 + " " + porcentaje4 + " " + porcentaje5 + " " + str(index_i) + " " + str(index_j) + "\n")
         os.system("rm output.txt")
 
 def escribir_kvector(k_index,iter):
@@ -67,7 +171,7 @@ def escribir_kvector(k_index,iter):
         line = fp.readline()
         cnt = 1
         while line:
-            if(cnt == 4):
+            if(line.split(" ")[0] == 'roses'):
                 linea = "Line {}: {}".format(cnt, line.strip())
             line = fp.readline()
             cnt += 1
@@ -202,13 +306,20 @@ def cut_off_kvector(frec,k_index):
     for i in range(110):
         for j in range(110):
             norm = np.sqrt(i**2 + j**2)
-            if(norm <= k_index):
+            if(i==0 and j==0):
                 frec[i][j]=0
                 s+=1
+            else:
+                if(norm <= k_index):
+                    frec[i][j]=0
+                    frec[i][-j]=0
+                    frec[-i-1][-j]=0
+                    frec[-i-1][j-1]=0
+                    s+=1
     return frec, s
 
 #codigo en negrilla representa isolated frecuencies
-for i in np.arange(0,155):
+for i in np.arange(155):
     if(str(glob.glob('frec*')) == '[]'):
         index_i=0
         index_j=0
@@ -229,7 +340,7 @@ for i in np.arange(0,155):
         f.write(h)
         f.close()
         #escribir(index_i, index_j)
-        escribir_kvector(i,s)
+        escribir(i,s)
     else:
         #index_i, index_j = index()
         img = cv2.imread('gray_rose.jpg',0)
@@ -252,4 +363,4 @@ for i in np.arange(0,155):
         f.close()
         #escribir(index_i, index_j)
         print (i*100/155.0)
-        escribir_kvector(i,s)
+        escribir(i,s)

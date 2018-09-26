@@ -11,10 +11,11 @@ porc2 = 'porcentajes2.txt'
 porc3 = 'porcentajes_kvector.txt'
 index_i = []
 index_j = []
-values = []
-index_i2 = []
-index_j2 = []
+values1 = []
 values2 = []
+values3 = []
+values4 = []
+values5 = []
 
 def grafica3D():
     #en la tesis se debe explicar que el paso es de 2 en 2.
@@ -40,9 +41,13 @@ def p1(porc):
     file1 = open(porc,'r')
     line = file1.readline()
     while line:
-        val, i, j = line.split(" ")
+        val_rose, val_tuli, val_gira, val_diente, val_marg, i, j = line.split(" ")
         #si estoy en grafica isolated cambiar float por int en los indices
-        values.append(float(val))
+        values1.append(float(val_rose))
+        values2.append(float(val_tuli))
+        values3.append(float(val_gira))
+        values4.append(float(val_diente))
+        values5.append(float(val_marg))
         index_i.append(float(i))
         index_j.append(float(j))
         line = file1.readline()
@@ -69,43 +74,45 @@ def grafica2D():
         }
 
     fig = plt.figure()
-    plt.subplot(221)
-    plt.figtext(0.99, 0.01, r'*each vertical line is a new $|\vec{k}|$ upper limit', horizontalalignment='right', fontdict=font)
+    #plt.figtext(0.99, 0.01, r'*each vertical line is a new $|\vec{k}|$ upper limit', horizontalalignment='right', fontdict=font)
     plt.xlabel(r'$|\vec{k}|$')
     plt.ylabel('% classification')
     plt.title(r'classification percentage by $|\vec{k}|$',fontdict=font,fontsize=5)
-    plt.plot(index_i, values)
+    plt.plot(index_i, values1, linewidth=0.01, label='Roses')
+    plt.plot(index_i, values2, linewidth=0.01, label='Tulipanes')
+    plt.plot(index_i, values3, linewidth=0.01, label='Girasoles')
+    plt.plot(index_i, values4, linewidth=0.01, label='Dientes de Leon')
+    plt.plot(index_i, values5, linewidth=0.01, label='Margaritas')
+    plt.legend(loc=2, prop={'size': 4})
 
-    plt.subplot(222)
-    plt.xlabel(r'$|\vec{k}|$')
-    plt.ylabel('% classification')
-    plt.title(r'classification percentage by $|\vec{k}|$*',fontdict=font,fontsize=5)
-    for i in range(50):
-        plt.axvline(x=index_i[i], color='grey', linestyle='--',linewidth=0.01, label=str('%.2f'%(index_i[i])))
-    #plt.legend(loc=2, prop={'size': 4})
-    plt.plot(index_i[0:50], values[0:50])
-
-    plt.subplot(223)
-    plt.xlabel(r'$|\vec{k}|$')
-    plt.ylabel('% classification')
-    plt.title(r'classification percentage by $|\vec{k}|$*',fontdict=font,fontsize=5)
-    for i in range(50,100):
-        plt.axvline(x=index_i[i], color='grey', linestyle='--',linewidth=0.01, label=str('%.2f'%(index_i[i])))
-    #plt.legend(loc=2, prop={'size': 4})
-    plt.plot(index_i[50:100], values[50:100])
-
-    plt.subplot(224)
-    plt.xlabel(r'$|\vec{k}|$')
-    plt.ylabel('% classification')
-    plt.title(r'classification percentage by $|\vec{k}|$*',fontdict=font,fontsize=5)
-    for i in range(100,155):
-        plt.axvline(x=index_i[i], color='grey', linestyle='--',linewidth=0.01, label=str('%.2f'%(index_i[i])))
-    #plt.legend(loc=2, prop={'size': 4})
-    plt.plot(index_i[100:156], values[100:156])
+    # plt.subplot(222)
+    # plt.xlabel(r'$|\vec{k}|$')
+    # plt.ylabel('% classification')
+    # plt.title(r'classification percentage by $|\vec{k}|$*',fontdict=font,fontsize=5)
+    # for i in range(50):
+    #     plt.axvline(x=index_i[i], color='grey', linestyle='--',linewidth=0.01, label=str('%.2f'%(index_i[i])))
+    # #plt.legend(loc=2, prop={'size': 4})
+    # plt.plot(index_i[0:50], values[0:50])
+    #
+    # plt.subplot(223)
+    # plt.xlabel(r'$|\vec{k}|$')
+    # plt.ylabel('% classification')
+    # plt.title(r'classification percentage by $|\vec{k}|$*',fontdict=font,fontsize=5)
+    # for i in range(50,100):
+    #     plt.axvline(x=index_i[i], color='grey', linestyle='--',linewidth=0.01, label=str('%.2f'%(index_i[i])))
+    # #plt.legend(loc=2, prop={'size': 4})
+    # plt.plot(index_i[50:100], values[50:100])
+    #
+    # plt.subplot(224)
+    # plt.xlabel(r'$|\vec{k}|$')
+    # plt.ylabel('% classification')
+    # plt.title(r'classification percentage by $|\vec{k}|$*',fontdict=font,fontsize=5)
+    # for i in range(100,155):
+    #     plt.axvline(x=index_i[i], color='grey', linestyle='--',linewidth=0.01, label=str('%.2f'%(index_i[i])))
+    # #plt.legend(loc=2, prop={'size': 4})
+    # plt.plot(index_i[100:156], values[100:156])
 
     plt.tight_layout()
-    plt.subplots_adjust(top=0.85)
-    fig.suptitle('Classification by Frequency Filter',fontdict=font, fontsize=10)
     plt.savefig("Frequency_filter.pdf")
     plt.close()
 
