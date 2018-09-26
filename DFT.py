@@ -199,17 +199,16 @@ def cut_off_frec(frec,i,j):
 
 def cut_off_kvector(frec,k_index):
     s=0
-    for i in range(220):
-        for j in range(220):
-            real,complex = frec[i][j]
-            norm = np.sqrt((float(real)**2 + float(complex)**2))
-            if(k_index < norm):
+    for i in range(110):
+        for j in range(110):
+            norm = np.sqrt(i**2 + j**2)
+            if(norm <= k_index):
                 frec[i][j]=0
                 s+=1
     return frec, s
 
 #codigo en negrilla representa isolated frecuencies
-for i in k_index:
+for i in np.arange(0,155):
     if(str(glob.glob('frec*')) == '[]'):
         index_i=0
         index_j=0
@@ -252,5 +251,5 @@ for i in k_index:
         f.write(h)
         f.close()
         #escribir(index_i, index_j)
-        print i, s
+        print (i*100/155.0)
         escribir_kvector(i,s)
