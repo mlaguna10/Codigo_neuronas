@@ -94,7 +94,6 @@ def escribir(index_i, index_j):
         porcentaje5 = s5.replace(")","")
 
         #rosas, tulipanes, sunflowers, dandelion, daisy
-        print porcentaje1,porcentaje2,porcentaje3,porcentaje4,porcentaje5
         file.write(porcentaje1 + " " + porcentaje2 + " " + porcentaje3 + " " + porcentaje4 + " " + porcentaje5 + " " + str(index_i) + " " + str(index_j) + "\n")
         os.system("rm output.txt")
     else:
@@ -115,7 +114,6 @@ def escribir(index_i, index_j):
         value=False
         for letter in linea2:
             if(value):
-                print letter
                 z2.append(letter)
             else:
                 if(letter==str(0)):
@@ -319,41 +317,41 @@ def cut_off_kvector(frec,k_index):
     return frec, s
 
 #codigo en negrilla representa isolated frecuencies
-for i in np.arange(155):
+for i in np.arange(330,336):
     if(str(glob.glob('frec*')) == '[]'):
         index_i=0
         index_j=0
         img = cv2.imread('gray_rose.jpg',0)
         dft = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
-        #dft = cut_off_frec(dft,index_i,index_j)
-        dft,s = cut_off_kvector(dft,i)
+        dft = cut_off_frec(dft,index_i,index_j)
+        #dft,s = cut_off_kvector(dft,i)
         img_back = cv2.idft(dft)
         img_back = cv2.magnitude(img_back[:,:,0],img_back[:,:,1])
         fig = plt.figure()
         fig.set_size_inches(3.56,3.56)
         plt.imshow(img_back,cmap='gray')
         plt.xticks([]), plt.yticks([])
-        #index_i, index_j = inicio(index_i, index_j)
+        index_i, index_j = inicio(index_i, index_j)
         plt.savefig('frec_' + str(i) + ".png",bbox_inches='tight', pad_inches=-0.1)
         f = open("output.txt", 'w')
         h = os.popen("python scripts/label_image.py --image frec_" + str(i) + ".png").read()
         f.write(h)
         f.close()
-        #escribir(index_i, index_j)
-        escribir(i,s)
+        escribir(index_i, index_j)
+        #escribir(i,s)
     else:
-        #index_i, index_j = index()
+        index_i, index_j = index()
         img = cv2.imread('gray_rose.jpg',0)
         dft = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
-        #dft = cut_off_frec(dft,index_i,index_j)
-        dft,s = cut_off_kvector(dft,i)
+        dft = cut_off_frec(dft,index_i,index_j)
+        #dft,s = cut_off_kvector(dft,i)
         img_back = cv2.idft(dft)
         img_back = cv2.magnitude(img_back[:,:,0],img_back[:,:,1])
         fig = plt.figure()
         fig.set_size_inches(3.56,3.56)
         plt.imshow(img_back,cmap='gray')
         plt.xticks([]), plt.yticks([])
-        #index_i, index_j = inicio(index_i, index_j)
+        index_i, index_j = inicio(index_i, index_j)
 
         os.system("rm frec_*")
         plt.savefig('frec_' + str(i) + ".png",bbox_inches='tight', pad_inches=-0.1)
@@ -361,6 +359,5 @@ for i in np.arange(155):
         h = os.popen("python scripts/label_image.py --image frec_" + str(i) + ".png").read()
         f.write(h)
         f.close()
-        #escribir(index_i, index_j)
-        print (i*100/155.0)
-        escribir(i,s)
+        escribir(index_i, index_j)
+        #escribir(i,s)
