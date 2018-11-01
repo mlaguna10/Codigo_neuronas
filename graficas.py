@@ -9,6 +9,9 @@ from matplotlib import cm
 porc = 'porcentajes.txt'
 porc2 = 'porcentajes2.txt'
 porc3 = 'porcentajes_kvector.txt'
+porc4 = 'porcentajes_phase_change_altas.txt'
+porc5 = 'porcentajes_phase_change_bajas.txt'
+porc6 = 'amplitude.txt'
 index_i = []
 index_j = []
 values1 = []
@@ -38,6 +41,7 @@ def grafica3D():
 
 def p1(porc):
     #si estoy en grafica de vectork index i es el k limite y el index j es la cantidad de frecuencies que se hacen 0
+
     file1 = open(porc,'r')
     line = file1.readline()
     while line:
@@ -68,22 +72,38 @@ def p2():
 
 def grafica2D():
     font = {'family': 'serif',
-        'color':  'darkred',
+        'color':  'black',
         'weight': 'normal',
         'size': 8,
         }
 
     fig = plt.figure()
     #plt.figtext(0.99, 0.01, r'*each vertical line is a new $|\vec{k}|$ upper limit', horizontalalignment='right', fontdict=font)
-    plt.xlabel(r'$|\vec{k}|$')
+    #plt.subplot(121)
+    plt.xlabel(r'number of frecuencies changed')
     plt.ylabel('% classification')
-    plt.title(r'classification percentage by $|\vec{k}|$',fontdict=font,fontsize=5)
-    plt.plot(index_i, values1, linewidth=0.01, label='Roses')
-    plt.plot(index_i, values2, linewidth=0.01, label='Tulipanes')
-    plt.plot(index_i, values3, linewidth=0.01, label='Girasoles')
-    plt.plot(index_i, values4, linewidth=0.01, label='Dientes de Leon')
-    plt.plot(index_i, values5, linewidth=0.01, label='Margaritas')
-    plt.legend(loc=2, prop={'size': 4})
+    axes = plt.gca()
+    #axes.set_xlim([0,120])
+    plt.title(r'classification percentage by $|\vec{k}|$ in amplitude information',fontdict=font,fontsize=5)
+    plt.plot(index_j, values1,linewidth=0.01, label="Rose")
+    #plt.axvline(index_i[4], color='grey', linestyle='--',linewidth=0.01, label=str('%.2f'%(index_j[4])))
+    plt.plot(index_j, values2, linewidth=0.01, label='Tulip')
+    plt.plot(index_j, values3, linewidth=0.01, label='Sunflower')
+    plt.plot(index_j, values4, linewidth=0.01, label='Dandelion')
+    plt.plot(index_j, values5, linewidth=0.01, label='Daisy')
+    #rosas, tulipanes, sunflowers, dandelion, daisy
+
+    #plt.subplot(122)
+    # plt.xlabel(r'$|\vec{k}|$')
+    # plt.ylabel('% classification')
+    # plt.title(r'classification percentage by $|\vec{k}|$ in phase information',fontdict=font,fontsize=5)
+    # plt.plot(index_i2, values12, color="b",linewidth=0.01, label="Filtro pasa bajas")
+    #plt.axvline(index_i2[1], color='grey', linestyle='--',linewidth=0.01, label=str('%.2f'%(index_j2[1])))
+
+    plt.legend(loc=6, prop={'size': 4})
+    plt.tight_layout()
+    plt.savefig("Frequency_filter.pdf")
+    plt.close()
 
     # plt.subplot(222)
     # plt.xlabel(r'$|\vec{k}|$')
@@ -112,12 +132,9 @@ def grafica2D():
     # #plt.legend(loc=2, prop={'size': 4})
     # plt.plot(index_i[100:156], values[100:156])
 
-    plt.tight_layout()
-    plt.savefig("Frequency_filter.pdf")
-    plt.close()
-
-p1(porc3)
+p1(porc6)
 grafica2D()
+
 
 #p1("porcentajes_modificado.txt")
 #grafica3D()
