@@ -450,7 +450,7 @@ for i in n_changes:
         plt.xticks([]), plt.yticks([])
         #index_i, index_j = inicio(index_i, index_j)
 
-        #os.system("rm frec_*")
+        os.system("rm frec_*")
         #plt.savefig('frec_' + str(index_i*220 + index_j) + ".png",bbox_inches='tight', pad_inches=-0.1)
         plt.savefig('frec_' + str(i) + ".png",bbox_inches='tight', pad_inches=-0.1)
         f = open("output.txt", 'w')
@@ -458,4 +458,5 @@ for i in n_changes:
         f.write(h)
         f.close()
         escribir(i, s)
+        os.system("rm frec_*")
         #escribir(i,s)
