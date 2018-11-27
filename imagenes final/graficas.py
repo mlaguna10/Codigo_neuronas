@@ -1,42 +1,40 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.interpolate import spline
 
-filepath='tulips.txt'
+filepath='daisy.txt'
 x=[]
 y=[]
 
 with open(filepath) as fp:
     line = fp.readline()
     while line:
-        y.append(float(line.split(' ')[1]))
+        y.append(float(line.split(' ')[4]))
         x.append(float(line.split(' ')[5]))
         line = fp.readline()
 
-s1,s2,s3=0,0,0
+z = np.zeros(13)
 c=0
 for i in range(len(y)):
-    if(x[i]==0):
-        s1+=y[i]
+    val = (i*10)%130
+    z[val/10] = z[val/10] + y[i]
+    if(val==0):
         c+=1
-    elif(x[i]==5):
-        s2+=y[i]
-    else:
-        s3+=y[i]
 
-y1 = s1/c
-y2 = s2/c
-y3 = s3/c
+average = z/c
 
 j=0
 fig = plt.figure()
 plt.xlabel(r'$\vec{k}$')
 plt.ylabel('% classification')
-plt.plot([0,5,10],[y1,y2,y3],linestyle='--', label='Average fit')
+plt.plot(np.arange(0,130,10),average,linestyle='--', label='Average fit', color='red')
 plt.axvline(0,color='blue', linestyle='--',linewidth=0.05, label=r'$\vec{k}=0$')
 plt.axvline(5,color='red', linestyle='--',linewidth=0.05, label=r'$\vec{k}=5$')
 plt.axvline(10,color='black', linestyle='--',linewidth=0.05, label=r'$\vec{k}=10$')
-while(j<len(x)/3):
-    plt.plot(x[j:j+3],y[j:j+3], alpha=.2)
-    j+=3
+while(j<len(x)+1):
+    plt.plot(x[j:j+13],y[j:j+13], alpha=.1)
+    j+=13
+plt.title("Daisy")
 plt.legend()
-plt.savefig('tulips.pdf')
+plt.savefig('daisy.pdf')
+plt.close()

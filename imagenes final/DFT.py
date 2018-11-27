@@ -412,7 +412,7 @@ if os.path.exists(fn):
 for j in range(len(archivos)):
     for i in n_changes:
         if(str(glob.glob('frec*')) == '[]'):
-            path = os.path.abspath("dandelion/" + archivos[j])
+            path = os.path.abspath("daisy/" + archivos[j])
             img = Image.open(path)
             dim_x, dim_y = img.size
             img = cv2.imread(path,0)
@@ -433,7 +433,7 @@ for j in range(len(archivos)):
             escribir(i, s)
             os.system("rm frec_*")
         else:
-            path = os.path.abspath("dandelion/" + archivos[j])
+            path = os.path.abspath("daisy/" + archivos[j])
             img = cv2.imread(path,0)
             dft = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
             dft,s = phase_change(dft,i)
